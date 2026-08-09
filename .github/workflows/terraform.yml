@@ -1,0 +1,138 @@
+name: Terraform CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    
+  
+env:
+  TF_VERSION: "1.9.0"
+  WORKING_DIR: "./enviroments/payments"
+
+jobs:
+  Terraform-validate:
+    name: "Validate & Format Check"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          Terraform_version: ${{ env.TF_VERSION }} 
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with: 
+          creds: | 
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}"
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}"
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID}}"
+              "tenantId": "${{ secretes.AZURE_TENANT_ID}}"
+            }
+
+      - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform Init
+
+      - name: Terraform Format Check
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform Validate
+  
+  terraform-plan:
+    name: "plan"
+    runs-on: ubuntu-latest
+    needs: Terraform-validate
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          Terraform_version: ${{ env.TF_VERSION }}
+
+      - name: azure/login
+        uses: azure/login@v2
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}"
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}"
+              "subscriptionId": "{{ secrets.AZURE_SUBSCRIPTION_ID }}"
+              "tenantId": "{{ secretes.AZURE_TENANT_ID }}"
+            }
+
+      - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform Init
+      
+      - name: Terraform Plan
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform plan -out=tfplan 
+        env:
+          TF_VAR_project_name: "./enviroments/payments"
+          TF_VAR_enviroment: "dev"
+          TF_VAR_admin_usename: "taiwo"
+
+      - name: Upload Plan
+        uses: actions/upload-artifact@v4
+        with: 
+          name: tfplan
+          path: ${{ env.WORKING_DIR }}
+
+  terraform-apply:
+    name: "Apply"
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with: 
+          Terraform_version: ${{ env.TF_VERSION }}
+          
+      - name: Azure Login
+        uses: azure/login@v2 
+        with:
+          with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}"
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}"
+              "subscriptionId": "{{ secrets.AZURE_SUBSCRIPTION_ID }}"
+              "tenantId": "{{ secretes.AZURE_TENANT_ID }}"
+            }
+
+      - name: Download Plan
+        uses: acttions/download-artifact@v4
+        with: 
+          name: tfplan
+          path: ${{ env.WORKING_DIR }}
+
+      - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform init
+
+      - name: terraform Apply
+        working-directory: ${{ env.WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
+

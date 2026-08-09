@@ -41,7 +41,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform Init
+        run: terraform init
 
       - name: Terraform Format Check
         working-directory: ${{ env.WORKING_DIR }}
@@ -78,7 +78,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform Init
+        run: terraform init
       
       - name: Terraform Plan
         working-directory: ${{ env.WORKING_DIR }}

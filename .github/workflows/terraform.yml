@@ -105,7 +105,7 @@ jobs:
         env:
           TF_VAR_project_name: "./enviroments/payments"
           TF_VAR_enviroment: "dev"
-          TF_VAR_admin_usename: "taiwo"
+          TF_VAR_admin_username: "taiwo"
 
       - name: Upload Plan
         uses: actions/upload-artifact@v4
@@ -122,7 +122,7 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      
+
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:

@@ -101,7 +101,7 @@ jobs:
       
       - name: Terraform Plan
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform plan -out=tfplan 
+        run: terraform plan -input=false -out=tfplan 
         env:
           TF_VAR_project_name: "./enviroments/payments"
           TF_VAR_enviroment: "dev"
@@ -159,5 +159,5 @@ jobs:
 
       - name: terraform Apply
         working-directory: ${{ env.WORKING_DIR }}
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -input=false -auto-approve tfplan
 

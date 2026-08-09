@@ -18,10 +18,9 @@ variable "admin_username" {
   type        = string
 }
 
-variable "ssh_public_key_path" {
+variable "ssh_public_key" {
   description = "Path to SSH public key"
   type        = string
-  default     = "~/.ssh/id_ed25519.pub"
 }
 
 variable "address_space" {

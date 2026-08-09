@@ -11,6 +11,7 @@ module "infrastructure" {
   backend_storage_account_name = var.backend_storage_account_name
   backend_container_name       = var.backend_container_name
   backend_state_key            = var.backend_state_key
+  ssh_public_key_path          = var.ssh_public_key_path
 }
 
 variable "project_name" {}
@@ -23,6 +24,7 @@ variable "environment" {}
 variable "backend_storage_account_name" { default = "cicdpipestorageacc" }
 variable "backend_container_name" { default = "ci-cd-container" }
 variable "backend_state_key" {}
+variable "ssh_public_key_path" {}
 
 
 output "ssh_command" {

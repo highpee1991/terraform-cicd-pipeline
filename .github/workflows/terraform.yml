@@ -141,7 +141,6 @@ jobs:
       - name: Azure Login
         uses: azure/login@v3 
         with:
-          with:
           creds: |
             {
               "clientId": "${{ secrets.AZURE_CLIENT_ID }}",

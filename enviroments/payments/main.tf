@@ -24,6 +24,7 @@ variable "backend_storage_account_name" { default = "cicdpipestorageacc" }
 variable "backend_container_name" { default = "ci-cd-container" }
 variable "backend_state_key" {}
 
+
 output "ssh_command" {
   value = module.infrastructure.ssh_command
 }

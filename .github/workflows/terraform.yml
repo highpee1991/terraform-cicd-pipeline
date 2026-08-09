@@ -54,7 +54,7 @@ jobs:
   terraform-plan:
     name: "plan"
     runs-on: ubuntu-latest
-    needs: Terraform-validate
+    needs: terraform-validate
 
     steps:
       - name: Checkout repository

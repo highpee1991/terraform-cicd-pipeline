@@ -1,0 +1,15 @@
+# cloud config
+
+package-update: true
+package-upgrade: true
+
+
+packages:
+- nginx
+- git
+
+runcmd:
+  - rm -rf var/www/html
+  - git clone https://github.com/highpee1991/cloud-devops-portfolio-repo.git /var/www/html
+  - systemctl enable nginx
+  - systemctl restart nginx

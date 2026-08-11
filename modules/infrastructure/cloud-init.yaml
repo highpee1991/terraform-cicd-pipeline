@@ -1,8 +1,6 @@
-# cloud config
-
+#cloud-config
 package-update: true
 package-upgrade: true
-
 
 packages:
 - nginx

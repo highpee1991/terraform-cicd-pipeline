@@ -16,7 +16,7 @@ module "infrastructure" {
 
 variable "project_name" {}
 variable "location" { default = "EAST US" }
-variable "vm_size" { default = "Standard_B1ls" }
+variable "vm_size" { default = "Standard_B2s" }
 variable "admin_username" {}
 variable "address_space" {}
 variable "subnet_prefix" {}

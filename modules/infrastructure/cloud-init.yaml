@@ -3,8 +3,8 @@ package_update: true
 package_upgrade: true
 
 packages:
-- nginx
-- git
+  - nginx
+  - git
 
 runcmd:
   - rm -rf /var/www/html
